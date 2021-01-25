@@ -1,0 +1,17 @@
+#recommend {
+    display      : none;
+    position     : absolute;
+    left         : 50%;
+    bottom       : 100px;
+    transform    : translateX(-50%);
+    background   : gray;
+    padding      : 10px 20px;
+    border-radius: 20px;
+    color        : white;
+    text-align   : center;
+}
+
+#recommend h2 {
+    margin     : 0;
+    font-weight: bold;
+}

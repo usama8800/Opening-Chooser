@@ -1,0 +1,26 @@
+{
+    "name": "Opening Chooser",
+    "version": "1.0",
+    "description": "Based on the first few chess moves, chooses a random opening for you to play",
+    "manifest_version": 2,
+    "permissions": [
+        "declarativeContent",
+        "activeTab"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://lichess.org/*"
+            ],
+            "css": [
+                "lichess.org.css"
+            ],
+            "js": [
+                "chess.js",
+                "eco.js",
+                "jquery.min.js",
+                "lichess.org.js"
+            ]
+        }
+    ]
+}
