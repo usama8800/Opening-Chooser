@@ -1,9 +1,50 @@
 const COLOR = { WHITE: 0, BLACK: 1 };
 
 const myNode = $('<div/>', { id: 'recommend' }).appendTo('body');
+const mySVG = $(document.createElementNS("http://www.w3.org/2000/svg", 'svg'));
+
+function boardCoordsToIndices(coord) {
+    return {
+        x: coord.charCodeAt(0) - 'a'.charCodeAt(0),
+        y: Number(coord[1]) - 1
+    };
+}
+
+function drawArrow(color, from, to) {
+    from = boardCoordsToIndices(from);
+    to = boardCoordsToIndices(to);
+
+    const board = $('cg-container svg');
+    const boardWidth = board[0].clientWidth;
+    const boardHeight = board[0].clientHeight;
+    const blockWidth = boardWidth / 8;
+    const blockHeight = boardHeight / 8;
+
+    let x1 = (from.x + 0.5) * blockWidth;
+    let x2 = (to.x + 0.5) * blockWidth;
+    let y1 = (from.y + 0.5) * blockHeight;
+    let y2 = (to.y + 0.5) * blockHeight;
+    if (color) {
+        x1 = boardWidth - x1;
+        x2 = boardWidth - x2;
+    } else {
+        y1 = boardHeight - y1;
+        y2 = boardHeight - y2;
+    }
+
+    mySVG.html(`
+    <defs>
+        <marker id="arrowhead" orient="auto" markerWidth="4" markerHeight="8" refX="2.05" refY="2.01">
+            <path d="M0,0 V4 L3,2 Z" fill="#003088"></path>
+        </marker>
+    </defs>
+    <line stroke="#003088" stroke-width="10" stroke-linecap="round" marker-end="url(#arrowhead)" opacity="0.4" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"></line>
+    `);
+}
 
 // Returns false to stop recommending moves
 function recommendMove(color) {
+    mySVG.html('');
     myNode.css('display', 'none');
     const moves = $('u8t').map(function () {
         return $(this).text();
@@ -38,12 +79,15 @@ function recommendMove(color) {
 
     myNode.html(`Play <h2>${chosenMove}</h2> for ${chosenLine[1]}`);
     myNode.css('display', 'block');
+    drawArrow(color, chosenUCIMove.slice(0, 2), chosenUCIMove.slice(2));
     return true;
 }
 
 setTimeout(function () {
     const moveListContainer = $('rm6');
     if (!moveListContainer[0]) return; // Not on a game page
+
+    $('cg-container').append(mySVG);
 
     const username = $('#user_tag').text();
     const whitePlayer = $('.player.is.white').text().split(' ')[0];
